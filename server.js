@@ -12,6 +12,7 @@ const app = express()
 app.set('views', __dirname + '/views') //dunder-score
 app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
+app.use(express.static('public')) // setup serving static assets
 
 
 // ROUTES
@@ -24,6 +25,11 @@ app.get('/', (req, res) => {
 const breadsController = require('./controllers/breads_controller.js')
 app.use('/breads', breadsController)
 
+
+// 404 Page
+app.get('*', function(req, res){
+  res.send('404')
+})
 
 // LISTEN
 app.listen(PORT, () => {
