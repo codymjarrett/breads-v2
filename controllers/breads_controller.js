@@ -17,7 +17,7 @@ breads.get('/:arrayIndex', (req, res) => {
     const currentBread = Bread[breadIndex];
 
     if(!currentBread){ // falsy
-      res.send('404')
+      res.render('error404')
     } else {
       res.render('Show', {
         bread: currentBread
