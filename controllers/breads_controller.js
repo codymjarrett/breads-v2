@@ -48,9 +48,18 @@ breads.get('/:arrayIndex', (req, res) => {
       res.render('error404')
     } else {
       res.render('Show', {
-        bread: currentBread
+        bread: currentBread,
+        index: breadIndex
       })
     }
+})
+
+// DELETE
+breads.delete('/:indexArray', (req, res) => {
+  console.log(req.query)
+  // start (2) ,  delete count
+  Bread.splice(req.params.indexArray, 1)
+  res.status(303).redirect('/breads')
 })
 
 
