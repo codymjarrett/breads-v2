@@ -3,7 +3,7 @@ const Default = require('./layouts/Default')
 
 
 
-function Show ({bread}) {
+function Show ({bread, bakersBread}) {
     // Confirm we are getting our bread data in the terminal.
     // console.log(bread.name)
     
@@ -24,7 +24,19 @@ function Show ({bread}) {
                 have gluten.
             </p>
             <img src={bread.image} alt={bread.name} />
-            <p>Baked by {bread.baker}</p>
+            <p>{bread.getBakedBy()}</p>
+            <div>Other breads by {bread.baker}</div>
+            <ol>
+            {bakersBread.map(bread => {
+              return (
+                <li>
+                  <a href={`/breads/${bread.id}`}>
+                  {bread.name}
+                  </a>
+                </li>
+              )
+            })}
+            </ol>
             <li><a href="/breads">Go home</a></li>
         </Default>
 

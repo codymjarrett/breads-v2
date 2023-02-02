@@ -58,9 +58,16 @@ breads.get('/:id/edit', (req, res) => {
 breads.get('/:id', (req, res) => {
     Bread.findById(req.params.id)
     .then(foundBread => {
-      res.render('Show', {
-        bread: foundBread,
+
+      Bread.getBreadsByBaker(foundBread.baker).then(bakersBread => {
+        res.render('Show', {
+          bread: foundBread,
+          bakersBread,
+        })
       })
+
+
+     
     })
     .catch(error =>{
       console.log(error)
@@ -86,9 +93,11 @@ breads.put('/:id', (req, res) => {
     req.body.hasGluten = false
   }
 
-  Bread.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true}).then((updatedBread) => {
+  Bread.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
+  .then((updatedBread) => {
     res.redirect(`/breads/${req.params.id}`)
-  }).catch(error => {
+  })
+  .catch(error => {
     res.render('GenericError', {
       error
     })
