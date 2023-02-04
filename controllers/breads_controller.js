@@ -1,12 +1,17 @@
 const express = require('express')
 const breads = express.Router()
 const seeds = require('../seeds')
+
+
 const Bread = require('../models/bread')
+const Baker = require('../models/baker')
 
 
 // INDEX
 breads.get('/', (req, res) => {
-  Bread.find({}, [], {sort: {name: 1}}).then((foundBreads) => {    
+  Bread.find({}, [], {sort: {name: 1}})
+  .populate('baker')
+  .then((foundBreads) => {    
     res.render('index', {breads: foundBreads, title: 'Index Page'})
   })
 })
@@ -33,23 +38,47 @@ breads.post('/', (req, res) => {
 
 // NEW
 breads.get('/new', (req, res) => {
-  res.render('new')
+  Baker.find().then(foundBakers => {
+    res.render('new', {
+      bakers: foundBakers
+    })
+  })
 })
 
 // EDIT
-breads.get('/:id/edit', (req, res) => {
+breads.get('/:id/edit', async (req, res) => {
 
-  Bread.findById(req.params.id)
-  .then(foundBread => {
-    res.render('Edit', {
-      bread: foundBread,
-    })
-  })
-  .catch(error =>{
-    console.log(error)
-    res.render('error404')
-  } )
+    try {
+      const foundBakers = await Baker.find()
+      const foundBread = await Bread.findById(req.params.id)
 
+      res.render('Edit', {
+        bread: foundBread,
+        bakers: foundBakers
+      })
+
+    } catch(error){
+      console.log(error)
+      res.render('error404')
+    }
+
+
+  
+
+  // Baker.find()
+  // .then(foundBakers => {
+  //   Bread.findById(req.params.id)
+  //   .then(foundBread => {
+  //     res.render('Edit', {
+  //       bread: foundBread,
+  //       bakers: foundBakers
+  //     })
+  //   })
+  //   .catch(error =>{
+  //     console.log(error)
+  //     res.render('error404')
+  //   } )
+  // })
 })
 
 
@@ -57,17 +86,11 @@ breads.get('/:id/edit', (req, res) => {
 // SHOW
 breads.get('/:id', (req, res) => {
     Bread.findById(req.params.id)
+    .populate('baker')
     .then(foundBread => {
-
-      Bread.getBreadsByBaker(foundBread.baker).then(bakersBread => {
         res.render('Show', {
           bread: foundBread,
-          bakersBread,
         })
-      })
-
-
-     
     })
     .catch(error =>{
       console.log(error)
