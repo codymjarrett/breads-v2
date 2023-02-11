@@ -11,8 +11,8 @@ const Baker = require('../models/baker')
 breads.get('/', async (req, res) => {
 
   try {
-    const foundBakers = await Baker.find({}, [], {sort: {name: 1}}).lean()
-    const foundBreads = await Bread.find().populate('baker').limit(2).lean()
+    const foundBakers = await Baker.find({}, [], {sort: {name: 1}})
+    const foundBreads = await Bread.find().populate('baker').limit(2)
   
     res.render('index', {breads: foundBreads, title: 'Index Page', bakers: foundBakers})
   }
@@ -22,21 +22,7 @@ breads.get('/', async (req, res) => {
 })
 
 
-// SHOW
-breads.get('/:id', (req, res) => {
-  Bread.findById(req.params.id)
-  .populate('baker')
-  .then(foundBread => {
-      res.render('Show', {
-        bread: foundBread,
-      })
-  })
-  .catch(error =>{
-    console.log(error)
-    res.render('error404')
-  } )
 
-})
 // // INDEX
 // breads.get('/', (req, res) => {
 
@@ -77,6 +63,22 @@ breads.get('/new', (req, res) => {
       bakers: foundBakers
     })
   })
+})
+
+// SHOW
+breads.get('/:id', (req, res) => {
+  Bread.findById(req.params.id)
+  .populate('baker')
+  .then(foundBread => {
+      res.render('Show', {
+        bread: foundBread,
+      })
+  })
+  .catch(error =>{
+    console.log(error)
+    res.render('error404')
+  } )
+
 })
 
 // EDIT
