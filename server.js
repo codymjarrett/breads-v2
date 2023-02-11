@@ -2,6 +2,7 @@
 const express = require('express')
 const methodOverride = require('method-override')
 const mongoose = require('mongoose')
+const serverless = require('serverless-http');
 
 // CONFIGURATION
 require('dotenv').config()
@@ -50,6 +51,6 @@ app.listen(PORT, () => {
   console.log(`Listening on http://localhost:${PORT}`);
 })
 
-module.exports = app
+module.exports = serverless(app);
 
 

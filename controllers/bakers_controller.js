@@ -3,7 +3,6 @@ const express = require('express')
 const baker = express.Router()
 const Baker = require('../models/baker')
 const bakerSeedData = require('../models/baker_seed')
-const { find } = require('../seeds')
 
 
 // INDEX
